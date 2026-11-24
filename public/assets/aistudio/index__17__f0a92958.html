@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS CREATOR COMMUNITY</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="icon" href="/logo-nexus.jpg" type="image/jpg">
+    <meta name="description" content="Web resmi Nexus Creator Community. Tempat download aset creator & komunitas Marga NexusFams.">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --bg-gradient: radial-gradient(circle at top left, #1a1a1a, #050505 70%);
+            --card-bg: rgba(20, 20, 22, 0.6);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent-gold: #d4af37;
+            --glass-bg: rgba(25, 25, 30, 0.4);
+            --glass-border: rgba(212, 175, 55, 0.15);
+            --glass-border-light: rgba(255, 255, 255, 0.08);
+            --nav-bg: rgba(15, 15, 18, 0.85);
+            --owner-color: #ff4757;
+            --admin-color: #2ed573;
+            --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-color: var(--bg-color);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 95px;
+            transition: all 0.4s ease;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.7);
+        }
+
+        .logo-small {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, var(--accent-gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            text-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .pangkat-badge-header {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 24px;
+            animation: fadeScale 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .brand-section {
+            text-align: center;
+            padding: 25px 0 20px 0;
+        }
+
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 20%, var(--accent-gold) 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            margin-top: 10px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        /* HALAMAN 1: BERANDA */
+        .welcome-card {
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #d1d5db;
+        }
+
+        .welcome-card p {
+            margin-top: 8px;
+        }
+
+        .feed-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feed-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: var(--accent-gold);
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .feed-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: linear-gradient(135deg, var(--accent-gold), #ffd700);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .feed-content {
+            padding: 18px;
+        }
+
+        .feed-date {
+            font-size: 11px;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .feed-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .feed-desc {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+
+        /* HALAMAN 2: PERALATAN & CHAT */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tool-card {
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card i {
+            font-size: 26px;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .tool-card span {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tool-card small {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* CHAT GIMIK */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .comment-box {
+            background: rgba(20, 20, 25, 0.5);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .comment-box.pinned {
+            border-color: rgba(212, 175, 55, 0.4);
+            background: linear-gradient(to bottom, rgba(212, 175, 55, 0.08), rgba(20, 20, 25, 0.6));
+        }
+
+        .pin-badge {
+            font-size: 11px;
+            color: var(--accent-gold);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .comment-name {
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .role-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .role-tag.owner { background: rgba(255, 71, 87, 0.2); color: var(--owner-color); }
+        .role-tag.admin { background: rgba(46, 213, 115, 0.2); color: var(--admin-color); }
+
+        .comment-text {
+            font-size: 13px;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        .comment-footer {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .like-btn {
+            font-size: 11px;
+            color: #ff4757;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .replies-container {
+            margin-top: 10px;
+            border-left: 2px solid rgba(255,255,255,0.08);
+            padding-left: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .reply-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .disabled-input-bar {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border-light);
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* HALAMAN 3: STRUKTUR */
+        .struktur-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .struktur-item {
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border-light);
+            padding: 14px 18px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* HALAMAN 4: PROFIL AKUN & BUNGKUSAN MENU */
+        .sheet-profile-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 24px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .sheet-avatar-wrapper {
+            position: relative;
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 14px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+            background: #111;
+        }
+
+        .sheet-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sheet-greeting {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .user-tag-text {
+            font-size: 12px;
+            color: #9ca3af;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .profile-bio-display {
+            font-size: 13px;
+            color: #d1d5db;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .profile-socials {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .profile-socials a {
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: color 0.2s;
+        }
+
+        /* TOMBOL BAGIKAN PROFIL */
+        .btn-share-profile {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+            border: 1px solid var(--glass-border);
+            color: var(--accent-gold);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-share-profile:active {
+            transform: scale(0.95);
+        }
+
+        /* BUNGKUSAN MENU PENGATURAN */
+        .settings-menu-list {
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .settings-item-left i {
+            font-size: 18px;
+            color: var(--accent-gold);
+            width: 24px;
+            text-align: center;
+        }
+
+        .settings-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .settings-item-right {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* HALAMAN FORM PENGATURAN (Ternavigasi) */
+        .menu-group-card {
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="file"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .btn-auth-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-gold), #e0c39e);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-back-settings {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--glass-border-light);
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .btn-logout {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--owner-color);
+            margin-top: 10px;
+            box-shadow: none;
+        }
+
+        /* FLOATING NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            height: 70px;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 35px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 999;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 25%;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+
+        /* MODAL PREVIEW AKUN (SHARE PREVIEW) */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .preview-card {
+            width: 100%;
+            max-width: 380px;
+            background: rgba(20, 20, 25, 0.95);
+            border: 1px solid var(--accent-gold);
+            border-radius: 28px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-overlay.show .preview-card {
+            transform: translateY(0);
+        }
+
+        .preview-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+                /* ================= HALAMAN PREVIEW PROFIL FULL SCREEN ================= */
+        .preview-full-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 10000;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: none;
+        }
+
+        .preview-full-page.show {
+            opacity: 1;
+            pointer-events: auto;
+            display: block;
+        }
+
+        .preview-header {
+            position: sticky;
+            top: 0;
+            padding: 18px 24px;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 10;
+            border-bottom: 1px solid var(--glass-border-light);
+        }
+
+        .btn-back-preview {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .preview-content {
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 170px;
+            /* Banner mewah perpaduan hitam pekat dan emas Nexus */
+            background: linear-gradient(135deg, #0a0a0d 0%, #151518 40%, rgba(212, 175, 55, 0.2) 150%);
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.15);
+            position: relative;
+        }
+
+        .preview-profile-info {
+            padding: 0 24px;
+            text-align: center;
+            margin-top: -55px; /* Efek overlap foto dengan banner */
+        }
+
+        .preview-avatar-wrapper {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 12px auto;
+            border: 4px solid var(--bg-color);
+            background: #111;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .preview-name-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .preview-name-row h3 {
+            font-size: 24px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .preview-description-section {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .desc-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .desc-title i {
+            color: var(--accent-gold);
+        }
+
+        .desc-box {
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 18px;
+            padding: 22px;
+            color: #d1d5db;
+            font-size: 13px;
+            line-height: 1.6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+        
+        /* MODAL LOGIN UNTUK FIRST TIME */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-overlay.hide {
+            display: none;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(20, 20, 25, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+
+        .official-accounts {
+            margin-bottom: 25px;
+        }
+
+        .official-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .official-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .official-btn {
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 16px;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .official-btn i {
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .official-btn span {
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Hover & Active Effects */
+        .official-btn:active {
+            transform: scale(0.95);
+        }
+
+        .official-btn.tiktok:hover, .official-btn.tiktok:active {
+            border-color: rgba(254, 44, 85, 0.5);
+            box-shadow: 0 4px 20px rgba(254, 44, 85, 0.2);
+        }
+        .official-btn.tiktok i { color: #fe2c55; }
+
+        .official-btn.discord:hover, .official-btn.discord:active {
+            border-color: rgba(88, 101, 242, 0.5);
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.2);
+        }
+        .official-btn.discord i { color: #5865f2; }
+
+        .official-btn.whatsapp:hover, .official-btn.whatsapp:active {
+            border-color: rgba(37, 211, 102, 0.5);
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.2);
+        }
+        .official-btn.whatsapp i { color: #25d366; }
+
+        /* TOMBOL PILIHAN VERSI DALAM MODAL */
+        .btn-version-option {
+            background: rgba(20, 20, 25, 0.6);
+            border: 1px solid var(--glass-border-light);
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-version-option:hover, .btn-version-option:active {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+        }
+
+        .btn-version-option i {
+            color: var(--accent-gold);
+        }
+        
+    </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "NexusFams",
+        "url": "https://webnexusfamsofc.starpit.my.id/",
+        "logo": "https://webnexusfamsofc.starpit.my.id/logo-nexus.jpg"
+    }
+    </script>
+</head>
+<body>
+
+    <!-- Header Aplikasi -->
+    <header>
+        <div class="logo-small" onclick="switchPage('beranda')">NexusFams</div>
+        <div id="globalHeaderBadge" class="pangkat-badge-header">MEMBER</div>
+    </header>
+
+    <!-- ================= HALAMAN 1: BERANDA ================= -->
+    <div id="berandaPage" class="page active">
+        <div class="brand-section">
+            <h1 class="brand-logo">NEXUS CREATOR COMMUNITY</h1>
+        </div>
+        
+        <div class="welcome-card">
+            <i class="fa-solid fa-crown" style="color: var(--accent-gold); font-size: 20px;"></i>
+            <p>Halo! Selamat datang di website resmi marga <b>NEXUS CREATOR COMMUNITY</b>. Disini adalah tempat kebutuhan atau peralatan marga Nexus, selamat menikmati fitur marga yahh!!!</p>
+        </div>
+
+        <div class="official-accounts">
+            <div class="official-title">
+                <i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i>
+                <span>Akun Official Marga</span>
+            </div>
+            <div class="official-grid">
+                <!-- TikTok -->
+                <a href="https://tiktok.com/@nexusfams1103" target="_blank" class="official-btn tiktok">
+                    <i class="fa-brands fa-tiktok"></i>
+                    <span>TikTok</span>
+                </a>
+
+                <!-- Discord -->
+                <a href="https://discord.gg/ydhrCHK8A" target="_blank" class="official-btn discord">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Discord</span>
+                </a>
+
+                <!-- Saluran WhatsApp -->
+                <a href="https://whatsapp.com/channel/0029Vb8WUbxE50UjmpWeXb2D" target="_blank" class="official-btn whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>Saluran WA</span>
+                </a>
+            </div>
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-bullhorn"></i> Papan Informasi Marga</h2>
+        
+        <!-- Kontainer Berita/Feed (Akan diisi otomatis oleh JS) -->
+        <div id="papanInformasiContainer"></div>
+    </div>
+
+    <!-- ================= HALAMAN 2: PERALATAN & CHAT GIMIK ================= -->
+    <div id="peralatanPage" class="page">
+        <h2 class="section-title"><i class="fa-solid fa-screwdriver-wrench"></i> Peralatan Marga</h2>
+        
+        <div class="tools-grid">
+            <div class="tool-card" style="cursor: pointer;" onclick="openOptionsModal('intro')">
+                <i class="fa-solid fa-clapperboard"></i>
+                <span>Intro Marga</span>
+                <small>Alight Motion</small>
+            </div>
+            <div class="tool-card" style="cursor: pointer;" onclick="openOptionsModal('wm')">
+                <i class="fa-solid fa-square-share-nodes"></i>
+                <span>WM Marga</span>
+                <small>Alight Motion</small>
+            </div>
+            <a href="https://drive.google.com/file/d/15H4OU7ekGCFf7_3x-OESgEgzXhKwSj6g/view?usp=drivesdk" target="_blank" class="tool-card">
+                <i class="fa-solid fa-font"></i>
+                <span>Font Marga</span>
+                <small>Drive file</small>
+            </a>
+            <a href="https://alightmotion.app" target="_blank" class="tool-card">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>CC Marga</span>
+                <small>Alight Motion</small>
+            </a>
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-comments"></i> Chat Global</h2>
+        
+        <!-- Chat Gimik -->
+        <div class="chat-container">
+            <div class="comment-box pinned">
+                <div class="pin-badge"><i class="fa-solid fa-thumbtack"></i> Disematkan oleh Owner</div>
+                <div class="comment-header">
+                    <div class="comment-info">
+                        <span class="comment-name">PitNewbie' <span class="role-tag owner">OWNER 👑</span></span>
+                    </div>
+                </div>
+                <div class="comment-text">wm v2 yng dinantikan kalian udh rilis tuh. "wm v3 mana min?" v3 buat gw aja, lagian kalian vote v2🗿😭, cc sama intro masih belum ada, kira² pertengahan September bakal rilis tuh cc ama intro, soalny intro gw lagi proses pembuatan hehehe.... doain biar hpny ga keriset lgi. udh segitu aja makasih, semangat ngonten ya🙌</div>
+            </div>
+
+            <div class="comment-box">
+                <div class="comment-header">
+                    <div class="comment-info">
+                        <span class="comment-name">Pitnewbie <span class="role-tag owner">#owner</span></span>
+                    </div>
+                </div>
+                <div class="comment-text">baguss ga web nya? siapa dlu yang buat, gw sering dibully sama member tpi masi sayang ma kalian 😑🗿</div>
+                <div class="comment-footer">
+                    <span class="like-btn"><i class="fa-solid fa-heart"></i> 218 Menyukai</span>
+                </div>
+
+                <div class="replies-container">
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">akari <span class="role-tag admin">#ADMIN</span></span>
+                        </div>
+                        <div class="comment-text">tuhhh dengerin kata owner kasian dia, iya ga biawak?🗿</div>
+                    </div>
+
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">PitNewbie' <span class="role-tag owner">OWNER 👑</span></span>
+                        </div>
+                        <div class="comment-text">maksud lu apaan? yang biawak siapa🤬🤬</div>
+                    </div>
+
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">sanzzz <span class="role-tag admin">#ADMIN</span></span>
+                        </div>
+                        <div class="comment-text">pitt tidur dh malem, beson main kaisar²an lagi</div>
+                    </div>
+
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">danz <span class="role-tag admin">#ADMIN</span></span>
+                        </div>
+                        <div class="comment-text">sanzzz tidur dh malem, besok ngehytamin member rusuh lagi;)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-box">
+                <div class="comment-header">
+                    <div class="comment-info">
+                        <span class="comment-name">dzaki <span class="role-tag admin">#admin</span></span>
+                    </div>
+                </div>
+                <div class="comment-text">aku admin aku berkuasa</div>
+                <div class="comment-footer">
+                    <span class="like-btn"><i class="fa-solid fa-heart"></i> 42 Menyukai</span>
+                </div>
+
+                <div class="replies-container">
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">mawan <span class="role-tag admin">#admin</span></span>
+                        </div>
+                        <div class="comment-text">woilah cik, ntar diparani</div>
+                    </div>
+
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">PitNewbie' <span class="role-tag owner">OWNER 👑</span></span>
+                        </div>
+                        <div class="comment-text">masih kupantau kau cuu.....</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="comment-box">
+                <div class="comment-header">
+                    <div class="comment-info">
+                        <span class="comment-name">akari <span class="role-tag admin">#admin</span></span>
+                    </div>
+                </div>
+                <div class="comment-text">diatasku pada rada² stres 🌚</div>
+                <div class="comment-footer">
+                    <span class="like-btn"><i class="fa-solid fa-heart"></i> 85 Menyukai</span>
+                </div>
+
+                <div class="replies-container">
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">mawan <span class="role-tag admin">#admin</span></span>
+                        </div>
+                        <div class="comment-text">kamu jangan gitu ya cantik, dc yu🌝</div>
+                    </div>
+                    
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">sanzzz <span class="role-tag admin">#ADMIN</span></span>
+                        </div>
+                        <div class="comment-text">bucin tidur dh malem, beson nge bucin lagi</div>
+                    </div>
+                    
+                    <div class="reply-box">
+                        <div class="comment-header">
+                            <span class="comment-name">akari <span class="role-tag admin">#ADMIN</span></span>
+                        </div>
+                        <div class="comment-text">🗿</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="disabled-input-bar">
+            <i class="fa-solid fa-lock"></i> Tombol pesan telah dinonaktifkan oleh Owner.
+        </div>
+    </div>
+
+    <!-- ================= HALAMAN 3: STRUKTUR ================= -->
+    <div id="strukturPage" class="page">
+        <h2 class="section-title"><i class="fa-solid fa-sitemap"></i> Struktur Marga</h2>
+        
+        <div class="struktur-list">
+            <div class="struktur-item" style="border-left: 4px solid var(--owner-color);">
+                <span style="font-size: 14px; font-weight: 700;">Owner</span>
+                <span class="role-tag owner">PitNewbie</span>
+            </div>
+            <div class="struktur-item" style="border-left: 4px solid #3498db;">
+                <span style="font-size: 14px; font-weight: 700;">Admin Besar</span>
+                <span style="font-size: 13px; color: var(--text-muted);">Sanzzz</span>
+            </div>
+            <div class="struktur-item" style="border-left: 4px solid #3498db;">
+                <span style="font-size: 14px; font-weight: 700;">Admin Biasa</span>
+                <span style="font-size: 13px; color: var(--text-muted);">Mawan</span>
+            </div>
+            <div class="struktur-item" style="border-left: 4px solid #3498db;">
+                <span style="font-size: 14px; font-weight: 700;">Admin Bot</span>
+                <span style="font-size: 13px; color: var(--text-muted);">SennStore</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= HALAMAN 4: PROFIL AKUN ================= -->
+    <div id="profilPage" class="page">
+        <h2 class="section-title"><i class="fa-solid fa-user"></i> Profil Akun</h2>
+        
+        <div class="sheet-profile-card">
+            <div class="sheet-avatar-wrapper">
+                <img id="myAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="sheet-avatar" alt="Avatar">
+            </div>
+            <h3 id="myUsername" class="sheet-greeting">Nama Pengguna</h3>
+            <span id="myTagId" class="user-tag-text">ID Tag: #000000</span>
+            <p id="myBio" class="profile-bio-display">Belum ada bio akun.</p>
+            
+            <div class="profile-socials">
+                <a id="lnkTiktok" href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                <a id="lnkYoutube" href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+
+            <!-- Fitur Baru: Bagikan Profil -->
+            <button class="btn-share-profile" onclick="shareMyProfile()">
+                <i class="fa-solid fa-share-nodes"></i> Bagikan Profil
+            </button>
+        </div>
+
+        <!-- BUNGKUSAN MENU AKUN -->
+        <h2 class="section-title"><i class="fa-solid fa-gear"></i> Menu Akun</h2>
+        <div class="settings-menu-list">
+            <div class="settings-item" onclick="switchPage('pengaturanForm')">
+                <div class="settings-item-left">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span class="settings-item-title">Pengaturan Akun</span>
+                </div>
+                <div class="settings-item-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= HALAMAN KHUSUS: PENGATURAN FORM ================= -->
+    <div id="pengaturanFormPage" class="page">
+        <button class="btn-back-settings" onclick="switchPage('profil')">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Profil
+        </button>
+
+        <h2 class="section-title"><i class="fa-solid fa-sliders"></i> Edit Pengaturan</h2>
+        
+        <div class="menu-group-card">
+            <div class="form-group">
+                <label>Ubah Foto Profil (Pilih dri Galeri)</label>
+                <input type="file" id="editAvatarFile" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>Ubah Username</label>
+                <input type="text" id="editUsername" placeholder="Username baru...">
+            </div>
+            <div class="form-group">
+                <label>Ubah Bio</label>
+                <input type="text" id="editBio" placeholder="Ketik bio profil...">
+            </div>
+            <div class="form-group">
+                <label>Tautan Akun TikTok</label>
+                <input type="text" id="editTiktok" placeholder="https://tiktok.com/@username">
+            </div>
+            <div class="form-group">
+                <label>Tautan Akun YouTube</label>
+                <input type="text" id="editYoutube" placeholder="https://youtube.com/@channel">
+            </div>
+            
+            <button class="btn-auth-submit" onclick="saveProfileChanges()">Simpan Perubahan</button>
+            <button class="btn-auth-submit btn-logout" onclick="logoutApp()">Reset / Keluar Akun</button>
+        </div>
+    </div>
+
+        <!-- ================= HALAMAN PREVIEW PROFIL (FULL SCREEN) ================= -->
+    <div id="previewOverlay" class="preview-full-page">
+        <div class="preview-header">
+            <button class="btn-back-preview" onclick="closePreviewModal()">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+        <div class="preview-content">
+            <!-- Banner Kosong / Corak di atas -->
+            <div class="profile-banner"></div>
+            
+            <div class="preview-profile-info">
+                <div class="sheet-avatar-wrapper preview-avatar-wrapper">
+                    <img id="prevAvatar" src="logo-nexus.jpg" class="sheet-avatar" alt="Avatar">
+                </div>
+                
+                <div class="preview-name-row">
+                    <h3 id="prevName">Name</h3>
+                    <!-- Ikon verifikasi ceklis ijo (Disembunyikan secara default) -->
+                    <i id="prevVerified" class="fa-solid fa-circle-check" style="color: #2ed573; display: none; font-size: 18px;"></i>
+                </div>
+                
+                <span id="prevTagId" class="user-tag-text" style="font-size: 12px; margin-bottom: 6px;">Tag ID: #000000</span>
+                <span id="prevPangkat" class="role-tag" style="display:inline-block; margin-bottom: 15px;">Pangkat</span>
+                
+                <div class="profile-socials" style="margin-bottom: 25px;">
+                    <a id="prevTiktok" href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                    <a id="prevYoutube" href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+                
+                <!-- Kolom Deskripsi (Pengganti Readme) -->
+                <div class="preview-description-section">
+                    <h4 class="desc-title"><i class="fa-solid fa-address-card"></i> Deskripsi Profil</h4>
+                    <div class="desc-box">
+                        <p id="prevBio">Belum ada deskripsi / bio.</p>
+                    </div>
+                </div>
+                
+                <button class="btn-auth-submit" style="margin-top: 30px; width: 100%; max-width: 400px;" onclick="closePreviewModal()">Masuk Ke Web Nexus</button>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- ================= MODAL PILIHAN PERALATAN ================= -->
+    <div id="optionsOverlay" class="preview-overlay">
+        <div class="preview-card">
+            <button class="preview-close-btn" onclick="closeOptionsModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div style="font-size: 11px; font-weight: 800; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;">
+                <i class="fa-solid fa-layer-group"></i> Pilih Versi
+            </div>
+            <h3 id="optionsTitle" style="font-size: 18px; color: #fff; margin-bottom: 15px;">Nama Peralatan</h3>
+            
+            <div id="optionsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Tombol versi akan dirender lewat JS di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= FLOATING BOTTOM NAV ================= -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchPage('beranda')" id="nav-beranda">
+            <i class="fa-solid fa-house"></i>
+            <span>Beranda</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('peralatan')" id="nav-peralatan">
+            <i class="fa-solid fa-toolbox"></i>
+            <span>Peralatan</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('struktur')" id="nav-struktur">
+            <i class="fa-solid fa-sitemap"></i>
+            <span>Struktur</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('profil')" id="nav-profil">
+            <i class="fa-solid fa-user"></i>
+            <span>Profil</span>
+        </div>
+    </nav>
+
+    <!-- ================= MODAL LOGIN UNTUK FIRST TIME ================= -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-logo" style="font-size:36px; color:var(--accent-gold); margin-bottom:10px;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2>NexusFams</h2>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">Masukkan identitas & kode pangkat.</p>
+            
+            <div class="form-group">
+                <label>Nama Lengkap / Nickname</label>
+                <input type="text" id="loginName" placeholder="Contoh: PitNewbie" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Kode Pangkat</label>
+                <input type="number" id="loginCode" placeholder="7 Digit Kode Pangkat..." required>
+            </div>
+
+            <div class="form-group">
+                <label>Foto Profil (Pilih dri Galeri)</label>
+                <input type="file" id="loginAvatarFile" accept="image/*">
+            </div>
+            
+            <button class="btn-auth-submit" onclick="handleLoginSubmit()">Masuk Sekarang</button>
+        </div>
+    </div>
+
+    <script>
+        const CODES = {
+            MEMBER: "7771890",
+            ADMIN: "5578901",
+            OWNER: "1200921"
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLogin = localStorage.getItem('nexus_logged');
+            if (isLogin === 'true') {
+                document.getElementById('loginOverlay').classList.add('hide');
+                loadUserProfile();
+            }
+            checkURLPreview();
+        });
+
+
+        // 1. Data Array Papan Informasi (Tinggal tambah/edit di sini)
+        const daftarInformasi = [
+            {  
+                title: "Pencopotan jabatan admin",  
+                badge: "informasi",  
+                desc: "jabatan ADMIN BESAR atas nama akari resmi undur diri, untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.",  
+                date: "Senin, 23 Nov 2026",  
+                iconClass: "fa-solid fa-user-slash"  
+            },
+            {  
+                title: "Pencopotan jabatan admin",  
+                badge: "informasi",  
+                desc: "jabatan admin poster atas nama dzaki resmi dicopot, untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.",  
+                date: "Senin, 2 Nov 2026",  
+                iconClass: "fa-solid fa-user-slash"  
+            },
+            {  
+                title: "Pencopotan jabatan admin",  
+                badge: "informasi",  
+                desc: "jabatan admin collab atas nama wildan/danz resmi dicopot, untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.",  
+                date: "Sabtu, 24 Okt 2026",  
+                iconClass: "fa-solid fa-user-slash"  
+            },
+            {  
+                title: "Pengumuman Penting Buat Anggota Marga",  
+                badge: "Penting",  
+                desc: "buat para my anggota, jangan sekali² sebarin kode pangkat ke luar marga, klo ad yng ketahuan nyebar bakal gw blacklist🤬<br>alasannya knapa min? tanya biawak",  
+                date: "Senin, 27 Juli 2026",  
+                iconClass: "fa-solid fa-bullhorn"  
+            },
+            {  
+                title: "Database Error & Pemeliharaan System",  
+                badge: "Pengumuman",  
+                desc: "Website saat ini bersifat sementara karena server utama sedang dalam perbaikan. Semua data akun tersimpan secara lokal di perangkat kalian.",  
+                date: "Sabtu, 25 Juli 2026",  
+                iconClass: "fa-solid fa-server"  
+            }
+        ];
+
+        // 2. Fungsi untuk Menampilkan Data ke HTML
+        function renderPapanInformasi() {
+            const container = document.getElementById('papanInformasiContainer');
+            if (!container) return;
+
+            let htmlContent = '';
+
+            daftarInformasi.forEach(item => {
+                htmlContent += `
+                    <div class="feed-card">
+                        <div class="feed-image">
+                            <div class="feed-badge">${item.badge}</div>
+                            <i class="${item.iconClass}"></i>
+                        </div>
+                        <div class="feed-content">
+                            <div class="feed-date">${item.date}</div>
+                            <h3 class="feed-title">${item.title}</h3>
+                            <p class="feed-desc">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlContent;
+        }
+
+        // 3. Panggil Fungsi saat Halaman Dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPapanInformasi(); // <--- Tambahkan panggilan ini
+            
+            const isLogin = localStorage.getItem('nexus_logged');
+            if (isLogin === 'true') {
+                document.getElementById('loginOverlay').classList.add('hide');
+                loadUserProfile();
+            }
+            checkURLPreview();
+        });
+
+        function shareMyProfile() {
+            // Ambil semua data profil
+            const shareData = {
+                name: localStorage.getItem('nexus_name') || 'Member',
+                pangkat: localStorage.getItem('nexus_pangkat') || 'MEMBER',
+                bio: localStorage.getItem('nexus_bio') || '',
+                tagid: localStorage.getItem('nexus_tagid') || 'NX-000000',
+                tiktok: localStorage.getItem('nexus_tiktok') || '#',
+                youtube: localStorage.getItem('nexus_youtube') || '#'
+                // Catatan: Foto profil sengaja tidak dimasukkan ke dalam link karena
+                // file gambar dari galeri akan membuat teks Base64 menjadi ratusan ribu karakter (URL Error).
+            };
+
+            // Convert data ke JSON string lalu dienkripsi pakai Base64 (encodeURIComponent agar emoji tidak error)
+            const base64Data = btoa(encodeURIComponent(JSON.stringify(shareData)));
+            
+            // Format URL baru: domain.com/#/share/eyJ...
+            const baseUrl = window.location.href.split('#')[0];
+            const shareUrl = `${baseUrl}#/share/${base64Data}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Profil ${shareData.name} - Nexus Creator Community`,
+                    text: `Cek profil ${shareData.name} (${shareData.pangkat}) di Website Nexus Creator Community!`,
+                    url: shareUrl
+                }).catch(() => {
+                    copyToClipboard(shareUrl);
+                });
+            } else {
+                copyToClipboard(shareUrl);
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(' Link profil berhasil disalin! Tinggal bagikan ke WhatsApp atau media sosial lainnya.');
+            }).catch(() => {
+                alert('Gagal menyalin link.');
+            });
+        }
+
+                function checkURLPreview() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#/share/')) {
+                try {
+                    const encryptedData = hash.replace('#/share/', '');
+                    const decodedString = decodeURIComponent(atob(encryptedData));
+                    const data = JSON.parse(decodedString);
+
+                    document.getElementById('prevName').innerText = data.name || 'Anggota Nexus';
+                    document.getElementById('prevBio').innerText = data.bio || 'Belum ada deskripsi / bio.';
+                    
+                    const prevTag = document.getElementById('prevTagId');
+                    if(prevTag) prevTag.innerText = `Tag ID: ${data.tagid || 'NX-000000'}`;
+                    
+                    const prevTiktok = document.getElementById('prevTiktok');
+                    if(prevTiktok) prevTiktok.href = data.tiktok || '#';
+
+                    const prevYoutube = document.getElementById('prevYoutube');
+                    if(prevYoutube) prevYoutube.href = data.youtube || '#';
+                    
+                    const badge = document.getElementById('prevPangkat');
+                    badge.innerText = data.pangkat || 'MEMBER';
+                    
+                    if (data.pangkat === 'OWNER') {
+                        badge.className = "role-tag owner";
+                        badge.style = ""; 
+                    } else if (data.pangkat === 'ADMIN') {
+                        badge.className = "role-tag admin";
+                        badge.style = ""; 
+                    } else {
+                        badge.className = "role-tag";
+                        badge.style.background = "rgba(52, 152, 219, 0.2)";
+                        badge.style.color = "#3498db";
+                    }
+
+                    // Logika Ceklis Ijo Khusus Admin / Owner
+                    const verifIcon = document.getElementById('prevVerified');
+                    if (data.pangkat === 'OWNER' || data.pangkat === 'ADMIN') {
+                        verifIcon.style.display = 'inline-block';
+                    } else {
+                        verifIcon.style.display = 'none';
+                    }
+
+                    document.getElementById('previewOverlay').classList.add('show');
+                } catch (e) {
+                    alert('Tautan profil tidak valid atau rusak!');
+                    window.location.hash = ''; 
+                }
+            }
+        }
+        
+        
+
+        function closePreviewModal() {
+            document.getElementById('previewOverlay').classList.remove('show');
+            window.location.hash = '';
+        }
+
+        // Autentikasi Login Pertama Kali
+        function handleLoginSubmit() {
+            const name = document.getElementById('loginName').value.trim();
+            const code = document.getElementById('loginCode').value.trim();
+            const fileInput = document.getElementById('loginAvatarFile');
+
+            if (!name || !code) {
+                alert('Nama dan Kode Pangkat tidak boleh kosong!');
+                return;
+            }
+
+            let pangkat = "GUEST";
+            let color = "#aaaaaa";
+
+            if (code === CODES.MEMBER) {
+                pangkat = "MEMBER";
+                color = "#3498db";
+            } else if (code === CODES.ADMIN) {
+                pangkat = "ADMIN";
+                color = "var(--admin-color)";
+            } else if (code === CODES.OWNER) {
+                pangkat = "OWNER";
+                color = "var(--owner-color)";
+            } else {
+                alert('Kode pangkat salah atau tidak terdaftar!');
+                return;
+            }
+            
+            const processSave = (avatarDataUrl) => {
+                localStorage.setItem('nexus_logged', 'true');
+                localStorage.setItem('nexus_name', name);
+                localStorage.setItem('nexus_code', code);
+                localStorage.setItem('nexus_pangkat', pangkat);
+                localStorage.setItem('nexus_pangkat_color', color);
+                localStorage.setItem('nexus_avatar', avatarDataUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150');
+                localStorage.setItem('nexus_bio', 'Member resmi Nexus Creator Community.');
+                localStorage.setItem('nexus_tiktok', '#');
+                localStorage.setItem('nexus_youtube', '#');
+                localStorage.setItem('nexus_tagid', 'NX-' + Math.floor(100000 + Math.random() * 900000));
+
+                document.getElementById('loginOverlay').classList.add('hide');
+                loadUserProfile();
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processSave(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                processSave(null);
+            }
+        }
+
+        // Tampilkan Data Profil
+        function loadUserProfile() {
+            const name = localStorage.getItem('nexus_name');
+            const pangkat = localStorage.getItem('nexus_pangkat');
+            const color = localStorage.getItem('nexus_pangkat_color');
+            const avatar = localStorage.getItem('nexus_avatar');
+            const bio = localStorage.getItem('nexus_bio');
+            const tagid = localStorage.getItem('nexus_tagid');
+            const tiktok = localStorage.getItem('nexus_tiktok');
+            const youtube = localStorage.getItem('nexus_youtube');
+
+            const headerBadge = document.getElementById('globalHeaderBadge');
+            headerBadge.innerText = pangkat;
+            headerBadge.style.background = color + "22";
+            headerBadge.style.color = color;
+            headerBadge.style.borderColor = color + "44";
+
+            document.getElementById('myUsername').innerText = name;
+            document.getElementById('myTagId').innerText = `Tag ID: ${tagid} (${pangkat})`;
+            document.getElementById('myBio').innerText = bio;
+            document.getElementById('myAvatar').src = avatar;
+
+            document.getElementById('lnkTiktok').href = tiktok;
+            document.getElementById('lnkYoutube').href = youtube;
+
+            document.getElementById('editUsername').value = name;
+            document.getElementById('editBio').value = bio;
+            document.getElementById('editTiktok').value = tiktok === '#' ? '' : tiktok;
+            document.getElementById('editYoutube').value = youtube === '#' ? '' : youtube;
+        }
+
+        // Simpan Perubahan Dari Halaman Pengaturan Form
+        function saveProfileChanges() {
+            const newName = document.getElementById('editUsername').value.trim();
+            const newBio = document.getElementById('editBio').value.trim();
+            const newTiktok = document.getElementById('editTiktok').value.trim();
+            const newYoutube = document.getElementById('editYoutube').value.trim();
+            const fileInput = document.getElementById('editAvatarFile');
+
+            if(!newName) {
+                alert('Username wajib diisi!');
+                return;
+            }
+
+            const updateFields = () => {
+                localStorage.setItem('nexus_name', newName);
+                localStorage.setItem('nexus_bio', newBio || 'Belum ada bio.');
+                localStorage.setItem('nexus_tiktok', newTiktok || '#');
+                localStorage.setItem('nexus_youtube', newYoutube || '#');
+                loadUserProfile();
+                alert('Pengaturan berhasil disimpan!');
+                switchPage('profil');
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('nexus_avatar', e.target.result);
+                    updateFields();
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                updateFields();
+            }
+        }
+
+        function logoutApp() {
+            if(confirm('Yakin ingin meriset login dan keluar?')) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        }
+
+        // Pindah Halaman
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+            const targetPage = document.getElementById(`${pageId}Page`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.classList.add('active');
+            } else if (pageId === 'pengaturanForm') {
+                document.getElementById('nav-profil').classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+          // --- DATA LINK PERALATAN ---
+        const toolLinksData = {
+            wm: {
+                title: "Pilih WM Marga",
+                options: [
+                    { name: "WM Marga V1 (Original)", link: "https://alightcreative.com/am/share/u/enakvg2wcmh1gh3i3mqedc0skkd2/p/wkrqlsgpjf-62da42c0b9010256" },
+                    { name: "WM Marga V2", link: "https://alightcreative.com/am/share/u/NyzsVoqityctBzlx2qfPr1CCjyn2/p/NwxYIZrMoP-5c319deb2a400853" },
+                    { name: "WM Marga V3", link: "https://rentry.co/nexusfams" }
+                ]
+            },
+            intro: {
+                title: "Pilih Intro Marga",
+                options: [
+                    { name: "Intro V1", link: "https://alightmotion.app" },
+                    { name: "Intro V2", link: "#" }
+                ]
+            }
+        };
+
+        // --- FUNGSI BUKA MODAL ---
+        function openOptionsModal(toolKey) {
+            const data = toolLinksData[toolKey];
+            if (!data) return;
+
+            document.getElementById('optionsTitle').innerText = data.title;
+            
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = ''; 
+
+            data.options.forEach(opt => {
+                const btn = document.createElement('a');
+                btn.href = opt.link;
+                btn.target = "_blank"; 
+                btn.className = "btn-version-option";
+                btn.innerHTML = `<span>${opt.name}</span> <i class="fa-solid fa-arrow-right"></i>`;
+                container.appendChild(btn);
+            });
+
+            document.getElementById('optionsOverlay').classList.add('show');
+        }
+
+        // --- FUNGSI TUTUP MODAL ---
+        function closeOptionsModal() {
+            document.getElementById('optionsOverlay').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

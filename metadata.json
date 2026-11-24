@@ -1,0 +1,6 @@
+{
+  "name": "NexusFams — Nexus Creator Community",
+  "description": "Web resmi Nexus Creator Community. Tempat download aset creator & komunitas Marga NexusFams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
