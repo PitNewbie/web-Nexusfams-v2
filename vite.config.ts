@@ -6,7 +6,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: "/",
+    base: "/web-Nexusfams-v2/",
     plugins: [
       react(),
       tailwindcss(),
