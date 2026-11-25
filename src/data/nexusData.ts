@@ -31,6 +31,14 @@ export const MUSIC_TRACKS: MusicTrack[] = [
     url: 'https://files.catbox.moe/020bjm.m4a',
     year: '2026',
   },
+  {
+    id: 'Dj-romlus-propun-x-su-jauh+mix-2026',
+    title: 'DJ ROMLOS PROPUN X SU JAUH SA TANAM X TIA MONIKA X MORENA SLOW VIRAL TIKTOK - MAMAN FVNDY',
+    artist: 'NexusFams Audio',
+    category: 'DJ Remix',
+    url: 'https://files.catbox.moe/np1dqr.mp3',
+    year: '2026',
+  },
 ];
 
 export const OFFICIAL_ACCOUNTS = [
