@@ -1,8 +1,24 @@
 export type ThemeMode = 'dark' | 'light';
 
-export type PageId = 'beranda' | 'peralatan' | 'struktur' | 'profil';
+export type PageId = 'beranda' | 'peralatan' | 'music' | 'struktur' | 'profil';
 
 export type RankRole = 'MEMBER' | 'ADMIN' | 'OWNER' | 'GUEST';
+
+export interface MusicTrack {
+  id: string;
+  title: string;
+  artist: string;
+  category: string;
+  url: string;
+  year?: string;
+}
+
+export interface SharedMusicData {
+  id: string;
+  title: string;
+  artist: string;
+  url: string;
+}
 
 export interface UserProfile {
   logged: boolean;
@@ -14,6 +30,7 @@ export interface UserProfile {
   tiktok: string;
   youtube: string;
   tagId: string;
+  favoriteTrackId: string;
 }
 
 export interface SharedProfileData {
@@ -23,6 +40,7 @@ export interface SharedProfileData {
   tagid: string;
   tiktok: string;
   youtube: string;
+  favMusic?: SharedMusicData;
 }
 
 export interface Announcement {
