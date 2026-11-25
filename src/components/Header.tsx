@@ -1,4 +1,4 @@
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Music2, Sun } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PageId, ThemeMode } from '../types/nexus';
 
@@ -7,11 +7,13 @@ interface HeaderProps {
   onNavigate: (page: PageId) => void;
   theme: ThemeMode;
   onToggleTheme: () => void;
+  isPlayingMusic?: boolean;
 }
 
-const NAV_LINKS: { id: PageId; label: string }[] = [
+const NAV_LINKS: { id: PageId; label: string; featured?: boolean }[] = [
   { id: 'beranda', label: 'Beranda' },
   { id: 'peralatan', label: 'Peralatan' },
+  { id: 'music', label: 'Music', featured: true },
   { id: 'struktur', label: 'Struktur' },
   { id: 'profil', label: 'Profil' },
 ];
@@ -21,6 +23,7 @@ export function Header({
   onNavigate,
   theme,
   onToggleTheme,
+  isPlayingMusic = false,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 h-14 md:h-16 backdrop-blur-xl bg-white/70 dark:bg-zinc-950/70 border-b border-zinc-900/8 dark:border-white/8 transition-colors duration-300">
@@ -34,13 +37,38 @@ export function Header({
           NexusFams
         </button>
 
-        {/* Zone 2: Desktop Single-Line Text Navigation */}
+        {/* Zone 2: Desktop Single-Line Text Navigation with Music centered */}
         <nav
           aria-label="Navigasi utama"
-          className="hidden md:flex items-center gap-7 text-sm font-medium"
+          className="hidden md:flex items-center gap-6 text-sm font-medium"
         >
           {NAV_LINKS.map((link) => {
             const isActive = activePage === link.id;
+            if (link.featured) {
+              return (
+                <button
+                  key={link.id}
+                  type="button"
+                  onClick={() => onNavigate(link.id)}
+                  className={`relative min-h-[38px] px-4 py-1.5 rounded-xl flex items-center gap-2 whitespace-nowrap shrink-0 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
+                    isActive
+                      ? 'bg-amber-600 text-white dark:bg-amber-400 dark:text-zinc-950 font-bold shadow-sm'
+                      : 'glass-surface text-zinc-900 dark:text-zinc-100 hover:border-amber-600/40 dark:hover:border-amber-400/40 font-semibold'
+                  }`}
+                >
+                  <Music2
+                    className={`w-4 h-4 ${
+                      isPlayingMusic ? 'animate-spin' : ''
+                    }`}
+                    style={
+                      isPlayingMusic ? { animationDuration: '4s' } : undefined
+                    }
+                  />
+                  <span>{link.label}</span>
+                </button>
+              );
+            }
+
             return (
               <button
                 key={link.id}
@@ -91,4 +119,5 @@ export function Header({
       </div>
     </header>
   );
-}
+   }
+   
