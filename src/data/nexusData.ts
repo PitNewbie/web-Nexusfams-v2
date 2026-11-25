@@ -25,7 +25,7 @@ export function resolveRankFromCode(code: string): RankRole | null {
 export const MUSIC_TRACKS: MusicTrack[] = [
   {
     id: 'dj-amnesia-viral-2026',
-    title: 'DJ AMNESIA | VIRAL 2026',
+    title: 'DJ AMNESIA AL GHAZALI - APA KAU AMNESIA',
     artist: 'NexusFams Audio',
     category: 'DJ Remix',
     url: 'https://files.catbox.moe/020bjm.m4a',
@@ -37,6 +37,14 @@ export const MUSIC_TRACKS: MusicTrack[] = [
     artist: 'NexusFams Audio',
     category: 'DJ Remix',
     url: 'https://files.catbox.moe/np1dqr.mp3',
+    year: '2026',
+  },
+  {
+    id: 'dj-di-cari-onty-onty',
+    title: 'DJ DI CARI ONTY ONTY SPEED UP',
+    artist: 'NexusFams Audio',
+    category: 'DJ Remix',
+    url: 'https://files.catbox.moe/x2eo0n.mp3',
     year: '2026',
   },
 ];
