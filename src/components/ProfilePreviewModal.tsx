@@ -1,15 +1,30 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowUpRight, BadgeCheck, FileText } from 'lucide-react';
-import { SharedProfileData } from '../types/nexus';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  BadgeCheck,
+  Disc3,
+  FileText,
+  Music2,
+  Pause,
+  Play,
+} from 'lucide-react';
+import { MusicTrack, SharedProfileData } from '../types/nexus';
 import { Avatar } from './Avatar';
 
 interface ProfilePreviewModalProps {
   data: (SharedProfileData & { avatar?: string }) | null;
+  currentTrack: MusicTrack | null;
+  isPlaying: boolean;
+  onPlaySharedMusic: (track: MusicTrack) => void;
   onClose: () => void;
 }
 
 export function ProfilePreviewModal({
   data,
+  currentTrack,
+  isPlaying,
+  onPlaySharedMusic,
   onClose,
 }: ProfilePreviewModalProps) {
   const isVerified =
@@ -21,6 +36,11 @@ export function ProfilePreviewModal({
       : data?.pangkat === 'ADMIN'
       ? 'text-emerald-700 dark:text-emerald-400'
       : 'text-sky-700 dark:text-sky-400';
+
+  const sharedMusic = data?.favMusic;
+  const isSharedMusicPlaying = Boolean(
+    sharedMusic && currentTrack?.url === sharedMusic.url && isPlaying
+  );
 
   return (
     <AnimatePresence>
@@ -119,8 +139,70 @@ export function ProfilePreviewModal({
                   </div>
                 )}
 
+                {/* Shared Favorite Music Showcase */}
+                {sharedMusic && (
+                  <div className="text-left pt-2 space-y-2.5">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                      <Music2 className="w-4 h-4 text-amber-700 dark:text-amber-300" />
+                      <span>Musik Favorit</span>
+                    </div>
+                    <div className="rounded-2xl p-4 bg-zinc-900/[0.03] dark:bg-white/[0.03] border border-zinc-900/8 dark:border-white/8 flex items-center gap-3.5">
+                      <div
+                        className={`w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 via-zinc-900 to-black border border-amber-500/35 flex items-center justify-center shrink-0 ${
+                          isSharedMusicPlaying ? 'animate-spin' : ''
+                        }`}
+                        style={
+                          isSharedMusicPlaying
+                            ? { animationDuration: '5s' }
+                            : undefined
+                        }
+                      >
+                        <Disc3 className="w-6 h-6 text-amber-300" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-display text-sm sm:text-base font-bold text-zinc-950 dark:text-white truncate">
+                          {sharedMusic.title}
+                        </p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+                          {sharedMusic.artist}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          onPlaySharedMusic({
+                            id: sharedMusic.id,
+                            title: sharedMusic.title,
+                            artist: sharedMusic.artist,
+                            category: 'Favorit Profil',
+                            url: sharedMusic.url,
+                          })
+                        }
+                        aria-label={
+                          isSharedMusicPlaying
+                            ? `Jeda ${sharedMusic.title}`
+                            : `Putar ${sharedMusic.title}`
+                        }
+                        className="min-w-[44px] min-h-[44px] px-4 rounded-xl bg-amber-600 hover:bg-amber-700 dark:bg-amber-400 dark:hover:bg-amber-300 text-white dark:text-zinc-950 font-semibold text-xs flex items-center gap-1.5 shrink-0 active:scale-95 transition-all"
+                      >
+                        {isSharedMusicPlaying ? (
+                          <>
+                            <Pause className="w-4 h-4" fill="currentColor" />
+                            <span>Jeda</span>
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4" fill="currentColor" />
+                            <span>Putar</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Bio / Description */}
-                <div className="text-left pt-3 space-y-2.5">
+                <div className="text-left pt-2 space-y-2.5">
                   <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                     <FileText className="w-4 h-4 text-amber-700 dark:text-amber-300" />
                     <span>Deskripsi Profil</span>
@@ -146,4 +228,5 @@ export function ProfilePreviewModal({
       )}
     </AnimatePresence>
   );
-}
+          }
+            
