@@ -1,6 +1,7 @@
 import {
   Announcement,
   ChatThread,
+  MusicTrack,
   RankRole,
   StructureMember,
   ToolItem,
@@ -20,6 +21,17 @@ export function resolveRankFromCode(code: string): RankRole | null {
   if (trimmed === RANK_CODES.OWNER) return 'OWNER';
   return null;
 }
+
+export const MUSIC_TRACKS: MusicTrack[] = [
+  {
+    id: 'dj-amnesia-viral-2026',
+    title: 'DJ AMNESIA | VIRAL 2026',
+    artist: 'NexusFams Audio',
+    category: 'DJ Remix',
+    url: 'https://files.catbox.moe/020bjm.m4a',
+    year: '2026',
+  },
+];
 
 export const OFFICIAL_ACCOUNTS = [
   {
@@ -297,3 +309,4 @@ export const STRUCTURE_MEMBERS: StructureMember[] = [
     description: 'Pemeliharaan utilitas dan sistem bot komunitas.',
   },
 ];
+      
