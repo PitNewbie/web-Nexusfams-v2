@@ -10,7 +10,7 @@ import {
 
 export const RANK_CODES: Record<'MEMBER' | 'ADMIN' | 'OWNER', string> = {
   MEMBER: '7771890',
-  ADMIN: '5578901',
+  ADMIN: '1276897',
   OWNER: '1200921',
 };
 
