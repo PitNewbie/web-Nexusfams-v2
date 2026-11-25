@@ -6,29 +6,37 @@ import {
   Camera,
   Check,
   Copy,
+  Disc3,
   Eye,
   KeyRound,
   Link2,
   LogOut,
   Moon,
+  Music2,
   Palette,
+  Pause,
+  Play,
   Share2,
   Shield,
   Sun,
   Trash2,
   UserCog,
 } from 'lucide-react';
-import { resolveRankFromCode } from '../data/nexusData';
-import { ThemeMode, UserProfile } from '../types/nexus';
+import { MUSIC_TRACKS, resolveRankFromCode } from '../data/nexusData';
+import { MusicTrack, ThemeMode, UserProfile } from '../types/nexus';
 import { Avatar } from './Avatar';
 
 interface ProfilPageProps {
   user: UserProfile;
   theme: ThemeMode;
+  currentTrack: MusicTrack | null;
+  isPlaying: boolean;
   onToggleTheme: (mode: ThemeMode) => void;
   onSaveProfile: (updates: Partial<UserProfile>) => void;
   onShareProfile: () => void;
   onPreviewOwnProfile: () => void;
+  onPlayTrack: (track: MusicTrack) => void;
+  onOpenMusicPage: () => void;
   onLogout: () => void;
   onNotify: (message: string, variant?: 'success' | 'error' | 'info') => void;
 }
@@ -45,10 +53,14 @@ const SETTINGS_TABS: { id: SettingsTab; label: string; icon: typeof UserCog }[] 
 export function ProfilPage({
   user,
   theme,
+  currentTrack,
+  isPlaying,
   onToggleTheme,
   onSaveProfile,
   onShareProfile,
   onPreviewOwnProfile,
+  onPlayTrack,
+  onOpenMusicPage,
   onLogout,
   onNotify,
 }: ProfilPageProps) {
@@ -56,6 +68,7 @@ export function ProfilPage({
   const [nameInput, setNameInput] = useState(user.name);
   const [bioInput, setBioInput] = useState(user.bio);
   const [avatarDraft, setAvatarDraft] = useState(user.avatar);
+  const [favTrackDraft, setFavTrackDraft] = useState(user.favoriteTrackId);
   const [tiktokInput, setTiktokInput] = useState(
     user.tiktok === '#' ? '' : user.tiktok
   );
@@ -70,14 +83,21 @@ export function ProfilPage({
     setNameInput(user.name);
     setBioInput(user.bio);
     setAvatarDraft(user.avatar);
+    setFavTrackDraft(user.favoriteTrackId);
     setTiktokInput(user.tiktok === '#' ? '' : user.tiktok);
     setYoutubeInput(user.youtube === '#' ? '' : user.youtube);
   }, [user]);
 
+  const pinnedMusic = MUSIC_TRACKS.find((t) => t.id === user.favoriteTrackId);
+  const isPinnedMusicPlaying = Boolean(
+    pinnedMusic && currentTrack?.id === pinnedMusic.id && isPlaying
+  );
+
   const hasUnsavedIdentity =
     nameInput.trim() !== user.name ||
     bioInput.trim() !== user.bio ||
-    avatarDraft !== user.avatar;
+    avatarDraft !== user.avatar ||
+    favTrackDraft !== user.favoriteTrackId;
 
   const hasUnsavedSocial =
     (tiktokInput.trim() || '#') !== user.tiktok ||
@@ -122,6 +142,7 @@ export function ProfilPage({
       name: trimmedName,
       bio: bioInput.trim() || 'Member resmi Nexus Creator Community.',
       avatar: avatarDraft,
+      favoriteTrackId: favTrackDraft,
     });
     onNotify('Identitas profil berhasil diperbarui.', 'success');
   };
@@ -160,7 +181,6 @@ export function ProfilPage({
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Left Column: Glass Profile Showcase */}
       <section className="lg:col-span-5 glass-surface rounded-3xl overflow-hidden">
-        {/* Subtle Decorative Gold Mesh Header */}
         <div className="h-24 bg-gradient-to-br from-amber-500/20 via-amber-400/10 to-transparent dark:from-amber-400/20 dark:via-zinc-900 dark:to-zinc-950 border-b border-zinc-900/8 dark:border-white/8" />
 
         <div className="px-6 pb-6 -mt-12 text-center space-y-4">
@@ -222,6 +242,75 @@ export function ProfilPage({
           <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-sm mx-auto">
             {user.bio || 'Belum ada bio akun.'}
           </p>
+
+          {/* Showcased Favorite Music on Profile */}
+          <div className="text-left rounded-2xl p-3.5 bg-zinc-900/[0.03] dark:bg-white/[0.03] border border-zinc-900/8 dark:border-white/8">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
+                <Music2 className="w-3.5 h-3.5" />
+                <span>Musik Favorit</span>
+              </span>
+              <button
+                type="button"
+                onClick={onOpenMusicPage}
+                className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              >
+                Kelola
+              </button>
+            </div>
+
+            {pinnedMusic ? (
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 via-zinc-900 to-black border border-amber-500/30 flex items-center justify-center shrink-0 ${
+                    isPinnedMusicPlaying ? 'animate-spin' : ''
+                  }`}
+                  style={
+                    isPinnedMusicPlaying ? { animationDuration: '5s' } : undefined
+                  }
+                >
+                  <Disc3 className="w-5 h-5 text-amber-300" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-display text-xs sm:text-sm font-bold text-zinc-950 dark:text-white truncate">
+                    {pinnedMusic.title}
+                  </p>
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">
+                    {pinnedMusic.artist} · {pinnedMusic.category}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onPlayTrack(pinnedMusic)}
+                  aria-label={
+                    isPinnedMusicPlaying
+                      ? `Jeda ${pinnedMusic.title}`
+                      : `Putar ${pinnedMusic.title}`
+                  }
+                  className="min-w-[40px] min-h-[40px] rounded-xl bg-amber-600 hover:bg-amber-700 dark:bg-amber-400 dark:hover:bg-amber-300 text-white dark:text-zinc-950 flex items-center justify-center shrink-0 active:scale-95 transition-all"
+                >
+                  {isPinnedMusicPlaying ? (
+                    <Pause className="w-4 h-4" fill="currentColor" />
+                  ) : (
+                    <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Belum ada musik favorit yang dipajang.
+                </p>
+                <button
+                  type="button"
+                  onClick={onOpenMusicPage}
+                  className="min-h-[34px] px-3 py-1 rounded-lg glass-surface text-xs font-semibold text-zinc-800 dark:text-zinc-200 whitespace-nowrap"
+                >
+                  Pilih Lagu
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Social Quick Links */}
           <div className="flex items-center justify-center gap-2.5 pt-1">
@@ -295,7 +384,7 @@ export function ProfilPage({
               Pengaturan Akun
             </h2>
             <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">
-              Kelola identitas, tautan sosial, tema tampilan, dan pangkat Anda.
+              Kelola identitas, musik favorit, tautan sosial, tema tampilan, dan pangkat Anda.
             </p>
           </div>
         </div>
@@ -435,6 +524,29 @@ export function ProfilPage({
                   placeholder="Ceritakan sedikit tentang gaya editing atau konten Anda..."
                   className="w-full px-4 py-3 rounded-xl bg-white/75 dark:bg-zinc-950/60 border border-zinc-900/12 dark:border-white/12 text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500/60 transition-all resize-none"
                 />
+              </div>
+
+              {/* Favorite Music Selector for Profile */}
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="editFavMusic"
+                  className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+                >
+                  Musik Favorit yang Dipajang di Profil
+                </label>
+                <select
+                  id="editFavMusic"
+                  value={favTrackDraft}
+                  onChange={(e) => setFavTrackDraft(e.target.value)}
+                  className="w-full min-h-[44px] px-4 py-2.5 rounded-xl bg-white/75 dark:bg-zinc-950/60 border border-zinc-900/12 dark:border-white/12 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/60 transition-all"
+                >
+                  <option value="">Tidak ada musik yang dipajang</option>
+                  {MUSIC_TRACKS.map((track) => (
+                    <option key={track.id} value={track.id}>
+                      {track.title} — {track.artist}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex items-center justify-between gap-3 pt-2">
@@ -688,4 +800,4 @@ export function ProfilPage({
       </section>
     </div>
   );
-}
+                }
