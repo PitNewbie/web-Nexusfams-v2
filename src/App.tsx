@@ -1,16 +1,21 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { BerandaPage } from './components/BerandaPage';
 import { BottomNav } from './components/BottomNav';
 import { Header } from './components/Header';
 import { LoginModal } from './components/LoginModal';
+import { MusicDetailModal } from './components/MusicDetailModal';
+import { MusicMiniPlayer } from './components/MusicMiniPlayer';
+import { MusicPage } from './components/MusicPage';
 import { PeralatanPage } from './components/PeralatanPage';
 import { ProfilPage } from './components/ProfilPage';
 import { ProfilePreviewModal } from './components/ProfilePreviewModal';
 import { StrukturPage } from './components/StrukturPage';
 import { ToastContainer } from './components/Toast';
 import { ToolOptionsModal } from './components/ToolOptionsModal';
+import { MUSIC_TRACKS } from './data/nexusData';
 import {
+  MusicTrack,
   PageId,
   RankRole,
   SharedProfileData,
@@ -29,6 +34,7 @@ const DEFAULT_USER: UserProfile = {
   tiktok: '#',
   youtube: '#',
   tagId: 'NX-000000',
+  favoriteTrackId: '',
 };
 
 function readInitialTheme(): ThemeMode {
@@ -45,7 +51,8 @@ function readInitialUser(): UserProfile {
   try {
     const logged = localStorage.getItem('nexus_logged') === 'true';
     if (!logged) return DEFAULT_USER;
-    const pangkat = (localStorage.getItem('nexus_pangkat') as RankRole) || 'MEMBER';
+    const pangkat =
+      (localStorage.getItem('nexus_pangkat') as RankRole) || 'MEMBER';
     return {
       logged: true,
       name: localStorage.getItem('nexus_name') || 'Member',
@@ -58,9 +65,21 @@ function readInitialUser(): UserProfile {
       tiktok: localStorage.getItem('nexus_tiktok') || '#',
       youtube: localStorage.getItem('nexus_youtube') || '#',
       tagId: localStorage.getItem('nexus_tagid') || 'NX-000000',
+      favoriteTrackId: localStorage.getItem('nexus_favorite_track_id') || '',
     };
   } catch {
     return DEFAULT_USER;
+  }
+}
+
+function readInitialFavoriteIds(): string[] {
+  try {
+    const raw = localStorage.getItem('nexus_favorite_tracks');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
   }
 }
 
@@ -73,6 +92,20 @@ export default function App() {
     (SharedProfileData & { avatar?: string }) | null
   >(null);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+
+  // Music Player State
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<MusicTrack | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isLooping, setIsLooping] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(0.85);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(
+    readInitialFavoriteIds
+  );
 
   const notify = useCallback(
     (message: string, variant: ToastItem['variant'] = 'info') => {
@@ -104,6 +137,15 @@ export default function App() {
     }
   }, [theme]);
 
+  // Sync Audio Element Volume/Loop/Mute
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = volume;
+    audio.muted = isMuted;
+    audio.loop = isLooping;
+  }, [volume, isMuted, isLooping]);
+
   // Parse #/share/... URL hash
   const checkShareHash = useCallback(() => {
     const hash = window.location.hash;
@@ -119,6 +161,7 @@ export default function App() {
           tagid: parsed.tagid || 'NX-000000',
           tiktok: parsed.tiktok || '#',
           youtube: parsed.youtube || '#',
+          favMusic: parsed.favMusic,
         });
       } catch {
         notify('Tautan profil tidak valid atau rusak.', 'error');
@@ -132,6 +175,143 @@ export default function App() {
     window.addEventListener('hashchange', checkShareHash);
     return () => window.removeEventListener('hashchange', checkShareHash);
   }, [checkShareHash]);
+
+  // Audio playback controls
+  const playTrack = useCallback(
+    async (track: MusicTrack, openDetail = false) => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      const isSameUrl = currentTrack?.url === track.url;
+      if (isSameUrl) {
+        if (audio.paused) {
+          try {
+            await audio.play();
+            setIsPlaying(true);
+          } catch {
+            notify('Gagal memutar audio. Coba ketuk lagi.', 'error');
+          }
+        } else if (!openDetail) {
+          audio.pause();
+          setIsPlaying(false);
+        }
+        if (openDetail) setIsDetailOpen(true);
+        return;
+      }
+
+      setCurrentTrack(track);
+      setCurrentTime(0);
+      setDuration(0);
+      audio.src = track.url;
+      audio.load();
+      if (openDetail) setIsDetailOpen(true);
+
+      try {
+        await audio.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+        notify('Gagal memuat streaming audio.', 'error');
+      }
+    },
+    [currentTrack, notify]
+  );
+
+  const togglePlayPause = useCallback(async () => {
+    const audio = audioRef.current;
+    if (!audio || !currentTrack) return;
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setIsPlaying(true);
+      } catch {
+        notify('Gagal memutar audio.', 'error');
+      }
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  }, [currentTrack, notify]);
+
+  const handleSeek = (newTime: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const handleSkip = (deltaSeconds: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const target = Math.max(
+      0,
+      Math.min(audio.duration || 0, audio.currentTime + deltaSeconds)
+    );
+    audio.currentTime = target;
+    setCurrentTime(target);
+  };
+
+  const handleClosePlayer = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setIsDetailOpen(false);
+    setCurrentTrack(null);
+  };
+
+  const handleToggleFavorite = (trackId: string) => {
+    setFavoriteIds((prev) => {
+      const exists = prev.includes(trackId);
+      const next = exists
+        ? prev.filter((id) => id !== trackId)
+        : [...prev, trackId];
+
+      try {
+        localStorage.setItem('nexus_favorite_tracks', JSON.stringify(next));
+      } catch {
+        // Ignore storage errors
+      }
+
+      if (!exists) {
+        if (!user.favoriteTrackId) {
+          handleSaveProfile({ favoriteTrackId: trackId });
+          notify('Ditambahkan ke favorit & dipajang di profil!', 'success');
+        } else {
+          notify('Ditambahkan ke daftar favorit.', 'success');
+        }
+      } else {
+        if (user.favoriteTrackId === trackId) {
+          handleSaveProfile({ favoriteTrackId: next[0] || '' });
+        }
+        notify('Dihapus dari favorit.', 'info');
+      }
+      return next;
+    });
+  };
+
+  const handlePinToProfile = (trackId: string) => {
+    const isAlreadyPinned = user.favoriteTrackId === trackId;
+    if (isAlreadyPinned) {
+      handleSaveProfile({ favoriteTrackId: '' });
+      notify('Musik dilepas dari tampilan profil.', 'info');
+      return;
+    }
+
+    if (!favoriteIds.includes(trackId)) {
+      const nextFavs = [...favoriteIds, trackId];
+      setFavoriteIds(nextFavs);
+      try {
+        localStorage.setItem('nexus_favorite_tracks', JSON.stringify(nextFavs));
+      } catch {
+        // Ignore storage errors
+      }
+    }
+    handleSaveProfile({ favoriteTrackId: trackId });
+    notify('Musik favorit dipajang di profil Anda!', 'success');
+  };
 
   const handleToggleTheme = (target?: ThemeMode) => {
     setTheme((prev) => (target ? target : prev === 'dark' ? 'light' : 'dark'));
@@ -159,6 +339,7 @@ export default function App() {
       tiktok: '#',
       youtube: '#',
       tagId,
+      favoriteTrackId: '',
     };
 
     try {
@@ -171,6 +352,7 @@ export default function App() {
       localStorage.setItem('nexus_tiktok', nextUser.tiktok);
       localStorage.setItem('nexus_youtube', nextUser.youtube);
       localStorage.setItem('nexus_tagid', nextUser.tagId);
+      localStorage.setItem('nexus_favorite_track_id', nextUser.favoriteTrackId);
     } catch {
       // Ignore storage quota warnings
     }
@@ -191,6 +373,7 @@ export default function App() {
         localStorage.setItem('nexus_tiktok', next.tiktok);
         localStorage.setItem('nexus_youtube', next.youtube);
         localStorage.setItem('nexus_tagid', next.tagId);
+        localStorage.setItem('nexus_favorite_track_id', next.favoriteTrackId);
       } catch {
         // Ignore storage errors
       }
@@ -199,6 +382,7 @@ export default function App() {
   };
 
   const handleShareProfile = async () => {
+    const pinnedTrack = MUSIC_TRACKS.find((t) => t.id === user.favoriteTrackId);
     const shareData: SharedProfileData = {
       name: user.name,
       pangkat: user.pangkat,
@@ -206,6 +390,14 @@ export default function App() {
       tagid: user.tagId,
       tiktok: user.tiktok,
       youtube: user.youtube,
+      favMusic: pinnedTrack
+        ? {
+            id: pinnedTrack.id,
+            title: pinnedTrack.title,
+            artist: pinnedTrack.artist,
+            url: pinnedTrack.url,
+          }
+        : undefined,
     };
 
     const base64Data = btoa(encodeURIComponent(JSON.stringify(shareData)));
@@ -234,6 +426,7 @@ export default function App() {
   };
 
   const handlePreviewOwnProfile = () => {
+    const pinnedTrack = MUSIC_TRACKS.find((t) => t.id === user.favoriteTrackId);
     setPreviewData({
       name: user.name,
       pangkat: user.pangkat,
@@ -242,6 +435,14 @@ export default function App() {
       tiktok: user.tiktok,
       youtube: user.youtube,
       avatar: user.avatar,
+      favMusic: pinnedTrack
+        ? {
+            id: pinnedTrack.id,
+            title: pinnedTrack.title,
+            artist: pinnedTrack.artist,
+            url: pinnedTrack.url,
+          }
+        : undefined,
     });
   };
 
@@ -253,6 +454,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
+    handleClosePlayer();
     try {
       localStorage.removeItem('nexus_logged');
       localStorage.removeItem('nexus_name');
@@ -263,27 +465,56 @@ export default function App() {
       localStorage.removeItem('nexus_tiktok');
       localStorage.removeItem('nexus_youtube');
       localStorage.removeItem('nexus_tagid');
+      localStorage.removeItem('nexus_favorite_track_id');
+      localStorage.removeItem('nexus_favorite_tracks');
     } catch {
       // Ignore storage errors
     }
+    setFavoriteIds([]);
     setUser(DEFAULT_USER);
     setActivePage('beranda');
     notify('Akun telah direset. Silakan masuk kembali.', 'info');
   };
+
+  const extraBottomPad = currentTrack ? 'pb-40 md:pb-24' : 'pb-28 md:py-10';
 
   return (
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen flex flex-col relative selection:bg-amber-500/25">
         <div className="nexus-backdrop" aria-hidden="true" />
 
+        {/* Persistent Global Audio Element */}
+        <audio
+          ref={audioRef}
+          preload="metadata"
+          onTimeUpdate={() => {
+            if (audioRef.current) {
+              setCurrentTime(audioRef.current.currentTime);
+            }
+          }}
+          onLoadedMetadata={() => {
+            if (audioRef.current) {
+              setDuration(audioRef.current.duration || 0);
+            }
+          }}
+          onEnded={() => {
+            if (!isLooping) setIsPlaying(false);
+          }}
+          onPause={() => setIsPlaying(false)}
+          onPlay={() => setIsPlaying(true)}
+        />
+
         <Header
           activePage={activePage}
           onNavigate={handleNavigate}
           theme={theme}
           onToggleTheme={() => handleToggleTheme()}
+          isPlayingMusic={isPlaying}
         />
 
-        <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-28 md:py-10">
+        <main
+          className={`flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 ${extraBottomPad}`}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activePage}
@@ -298,15 +529,36 @@ export default function App() {
               {activePage === 'peralatan' && (
                 <PeralatanPage onOpenToolModal={(key) => setToolModalKey(key)} />
               )}
+              {activePage === 'music' && (
+                <MusicPage
+                  currentTrack={currentTrack}
+                  isPlaying={isPlaying}
+                  currentTime={currentTime}
+                  duration={duration}
+                  favoriteIds={favoriteIds}
+                  pinnedTrackId={user.favoriteTrackId}
+                  onSelectTrack={(track, openDetail) =>
+                    playTrack(track, openDetail)
+                  }
+                  onTogglePlay={togglePlayPause}
+                  onToggleFavorite={handleToggleFavorite}
+                  onPinToProfile={handlePinToProfile}
+                  onOpenDetail={() => setIsDetailOpen(true)}
+                />
+              )}
               {activePage === 'struktur' && <StrukturPage />}
               {activePage === 'profil' && (
                 <ProfilPage
                   user={user}
                   theme={theme}
+                  currentTrack={currentTrack}
+                  isPlaying={isPlaying}
                   onToggleTheme={(mode) => handleToggleTheme(mode)}
                   onSaveProfile={handleSaveProfile}
                   onShareProfile={handleShareProfile}
                   onPreviewOwnProfile={handlePreviewOwnProfile}
+                  onPlayTrack={(track) => playTrack(track, false)}
+                  onOpenMusicPage={() => handleNavigate('music')}
                   onLogout={handleLogout}
                   onNotify={notify}
                 />
@@ -322,7 +574,26 @@ export default function App() {
           </div>
         </footer>
 
-        <BottomNav activePage={activePage} onNavigate={handleNavigate} />
+        <MusicMiniPlayer
+          track={currentTrack}
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          duration={duration}
+          isFavorite={
+            currentTrack ? favoriteIds.includes(currentTrack.id) : false
+          }
+          hidden={isDetailOpen || Boolean(previewData) || !user.logged}
+          onTogglePlay={togglePlayPause}
+          onToggleFavorite={handleToggleFavorite}
+          onOpenDetail={() => setIsDetailOpen(true)}
+          onClosePlayer={handleClosePlayer}
+        />
+
+        <BottomNav
+          activePage={activePage}
+          onNavigate={handleNavigate}
+          isPlayingMusic={isPlaying}
+        />
 
         {/* Modals & Overlays */}
         {!user.logged && !previewData && (
@@ -339,8 +610,40 @@ export default function App() {
           onNotify={notify}
         />
 
+        <MusicDetailModal
+          open={isDetailOpen}
+          track={currentTrack}
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          duration={duration}
+          isLooping={isLooping}
+          isMuted={isMuted}
+          volume={volume}
+          isFavorite={
+            currentTrack ? favoriteIds.includes(currentTrack.id) : false
+          }
+          isPinnedOnProfile={
+            currentTrack ? user.favoriteTrackId === currentTrack.id : false
+          }
+          onClose={() => setIsDetailOpen(false)}
+          onTogglePlay={togglePlayPause}
+          onSeek={handleSeek}
+          onSkip={handleSkip}
+          onToggleLoop={() => setIsLooping((prev) => !prev)}
+          onToggleMute={() => setIsMuted((prev) => !prev)}
+          onVolumeChange={(val) => {
+            setVolume(val);
+            if (val > 0 && isMuted) setIsMuted(false);
+          }}
+          onToggleFavorite={handleToggleFavorite}
+          onPinToProfile={handlePinToProfile}
+        />
+
         <ProfilePreviewModal
           data={previewData}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+          onPlaySharedMusic={(track) => playTrack(track, false)}
           onClose={handleClosePreview}
         />
 
@@ -348,4 +651,4 @@ export default function App() {
       </div>
     </MotionConfig>
   );
-}
+        }
