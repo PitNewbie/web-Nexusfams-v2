@@ -47,6 +47,14 @@ export const MUSIC_TRACKS: MusicTrack[] = [
     url: 'https://files.catbox.moe/x2eo0n.mp3',
     year: '2026',
   },
+  {
+    id: 'dj-aku-anak-kampunk-x-slow',
+    title: 'DJ AKU ANAK KAMPUNG KERJAKU KERJA MOTONG X STYLE KONDANG SELOW',
+    artist: 'NexusFams Audio',
+    category: 'DJ Remix',
+    url: 'https://files.catbox.moe/lvoyu7.mp3',
+    year: '2026',
+  },
 ];
 
 export const OFFICIAL_ACCOUNTS = [
@@ -73,6 +81,14 @@ export const OFFICIAL_ACCOUNTS = [
 export const ANNOUNCEMENTS: Announcement[] = [
   {
     id: 'ann-1',
+    title: 'Mau request lagu?',
+    category: 'Informasi',
+    desc: 'Cara nambahin lagu fav kalian? tapi bingung caranya gimana?... gampang, chat owner trus kasih judul lagu + lagu nya ya.... durasi berapapun boleh, asal jangan berbau 18+, gw nantikan lagu fav kalian..',
+    date: 'Kamis, 26 Nov 2026',
+    icon: 'megaphone',
+  },
+  {
+    id: 'ann-2',
     title: 'Pencopotan jabatan admin',
     category: 'Informasi',
     desc: 'Jabatan Admin Besar atas nama akari resmi undur diri. Untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.',
@@ -80,7 +96,7 @@ export const ANNOUNCEMENTS: Announcement[] = [
     icon: 'user-slash',
   },
   {
-    id: 'ann-2',
+    id: 'ann-3',
     title: 'Pencopotan jabatan admin',
     category: 'Informasi',
     desc: 'Jabatan admin poster atas nama dzaki resmi dicopot. Untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.',
@@ -88,7 +104,7 @@ export const ANNOUNCEMENTS: Announcement[] = [
     icon: 'user-slash',
   },
   {
-    id: 'ann-3',
+    id: 'ann-4',
     title: 'Pencopotan jabatan admin',
     category: 'Informasi',
     desc: 'Jabatan admin collab atas nama wildan/danz resmi dicopot. Untuk keterangan lanjutan ada di saluran WhatsApp marga, terimakasih.',
@@ -96,7 +112,7 @@ export const ANNOUNCEMENTS: Announcement[] = [
     icon: 'user-slash',
   },
   {
-    id: 'ann-4',
+    id: 'ann-5',
     title: 'Pengumuman Penting Buat Anggota Marga',
     category: 'Penting',
     desc: 'Buat para my anggota, jangan sekali-kali sebarin kode pangkat ke luar marga, kalau ada yang ketahuan nyebar bakal gw blacklist🤬\nAlasannya kenapa min? Tanya biawak.',
@@ -104,7 +120,7 @@ export const ANNOUNCEMENTS: Announcement[] = [
     icon: 'megaphone',
   },
   {
-    id: 'ann-5',
+    id: 'ann-6',
     title: 'Database Error & Pemeliharaan System',
     category: 'Pengumuman',
     desc: 'Website saat ini bersifat sementara karena server utama sedang dalam perbaikan. Semua data akun tersimpan secara lokal di perangkat kalian.',
